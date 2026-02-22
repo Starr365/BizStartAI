@@ -1,34 +1,53 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { Op } = require("sequelize"); // Required for OR queries
 const User = require("../models/user.model");
 const AppError = require("../utils/AppError");
 
 const register = async (req, res, next) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, phoneNumber, password } = req.body;
 
-    // Joi handles required field validation
+    // Check if the provided email OR phone number already exists
+    const existingConditions = [];
+    if (email) existingConditions.push({ email });
+    if (phoneNumber) existingConditions.push({ phone_number: phoneNumber });
 
-    const existingUser = await User.findOne({ where: { email } });
+    const existingUser = await User.findOne({
+      where: {
+        [Op.or]: existingConditions
+      }
+    });
+
     if (existingUser) {
-      return next(new AppError("Email already registered", 409));
+      return next(new AppError("Email or Phone number is already registered", 409));
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await User.create({
       name,
-      email,
+      email: email || null,
+      phone_number: phoneNumber || null,
       password: hashedPassword,
+      auth_provider: 'local'
     });
+
+    const token = jwt.sign(
+      { id: user.id, email: user.email, phone_number: user.phone_number },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
 
     res.status(201).json({
       success: true,
       message: "User registered successfully",
+      token,
       data: {
         id: user.id,
         name: user.name,
         email: user.email,
+        phoneNumber: user.phone_number,
       },
     });
 
@@ -39,13 +58,19 @@ const register = async (req, res, next) => {
 
 const login = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const { email, phoneNumber, password } = req.body;
 
-    // Joi handles required field validation
+    // Search the database based on whichever identifier the user typed in
+    const searchCondition = email ? { email } : { phone_number: phoneNumber };
 
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({ where: searchCondition });
+    
     if (!user) {
       return next(new AppError("Invalid credentials", 401));
+    }
+
+    if (!user.password) {
+      return next(new AppError("Please log in with Google", 401));
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -54,7 +79,7 @@ const login = async (req, res, next) => {
     }
 
     const token = jwt.sign(
-      { id: user.id, email: user.email },
+      { id: user.id, email: user.email, phone_number: user.phone_number },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
@@ -63,6 +88,12 @@ const login = async (req, res, next) => {
       success: true,
       message: "Login successful",
       token,
+      data: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phoneNumber: user.phone_number
+      }
     });
 
   } catch (error) {
