@@ -14,6 +14,8 @@ import FinishSetup from './pages/FinishSetup';
 import Dashboard from './pages/Dashboard';
 import ProgressDashboard from "./pages/ProgressDashboard";
 import AIMentor from "./pages/AIMentor";
+import Tools from './pages/Tools';
+import BusinessPlan from './pages/BusinessPlan';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
 // 1. Define the App component first
@@ -35,6 +37,8 @@ function App() {
           <Route path="/Dashboard" element={<Dashboard />} />
           <Route path="/progress" element={<ProgressDashboard />} />
           <Route path="/chat" element={<AIMentor />} />
+          <Route path="/tools" element={<Tools />}/>
+          <Route path="/business-plan" element={<BusinessPlan />}/>
         </Routes>
       </main>
     </div>
