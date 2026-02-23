@@ -97,24 +97,33 @@ const BusinessJourneyScreen = () => {
 
             {selectedStage && (
               <button 
-                onClick={() => {
-                  localStorage.setItem('businessStage', selectedStage);
-                  if (selectedStage === 'idea') navigate('/IdeaStage'); 
-                  else if (selectedStage === 'early') navigate('/EarlyStage'); 
-                  else if (selectedStage === 'growth') navigate('/GrowthStage');
-                }}
-                style={{ 
-                  backgroundColor: '#6E62B1',
-                  fontFamily: "'Inter', sans-serif",
-                  fontWeight: '500',
-                  fontSize: '16px',
-                  textShadow: '0px 1px 4px rgba(0, 0, 0, 0.40)', 
-                  boxShadow: '0px 2px 8px rgba(110, 98, 177, 0.25)',
-                }}
-                className="w-full text-white py-4 rounded-2xl transition-all active:scale-[0.98] mt-6 cursor-pointer border-none outline-none"
-              >
-                Continue
-              </button>
+  onClick={() => {
+    // 1. Retrieve the existing user account data
+    const existingData = JSON.parse(localStorage.getItem('userAccount') || '{}');
+
+    // 2. Add the selected stage to that specific user object
+    const updatedData = { ...existingData, stage: selectedStage };
+
+    // 3. Save the merged data back to storage
+    localStorage.setItem('userAccount', JSON.stringify(updatedData));
+
+    // 4. Navigate to the specific stage screen
+    if (selectedStage === 'idea') navigate('/IdeaStage'); 
+    else if (selectedStage === 'early') navigate('/EarlyStage'); 
+    else if (selectedStage === 'growth') navigate('/GrowthStage');
+  }}
+  style={{ 
+    backgroundColor: '#6E62B1',
+    fontFamily: "'Inter', sans-serif",
+    fontWeight: '500',
+    fontSize: '16px',
+    textShadow: '0px 1px 4px rgba(0, 0, 0, 0.40)', 
+    boxShadow: '0px 2px 8px rgba(110, 98, 177, 0.25)',
+  }}
+  className="w-full text-white py-4 rounded-2xl transition-all active:scale-[0.98] mt-6 cursor-pointer border-none outline-none"
+>
+  Continue
+</button>
             )}
           </div>
         </div>

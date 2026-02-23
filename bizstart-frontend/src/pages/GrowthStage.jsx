@@ -49,7 +49,7 @@ const GrowthStageScreen = () => {
   const getAISuggestedIndustry = async (name, description) => {
     try {
       // Direct key implementation
-      const genAI = new GoogleGenerativeAI("AIzaSyCkr3ExXNTlq3ZOJO8DRaSqaSx2dCpRdrk");
+      const genAI = new GoogleGenerativeAI("AIzaSyDPDeIWbR2CqoF9Mcw9itZolPwJFiqVfmQ");
       const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
       const prompt = `

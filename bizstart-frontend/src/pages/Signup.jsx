@@ -34,14 +34,30 @@ const SignupScreen = () => {
     }));
   };
 
-  const handleCreateAccount = () => {
+const handleCreateAccount = () => {
     if (!formData.name || !formData.phoneNumber || !formData.password) {
       toast.error('Please fill in all fields to continue');
       return;
     }
-    localStorage.setItem('userAccount', JSON.stringify(formData));
+
+    // 1. Get the current list of users (or an empty array if none exist)
+    const existingUsers = JSON.parse(localStorage.getItem('allUsers') || '[]');
+
+    // 2. Check if the user already exists (optional but recommended)
+    const userExists = existingUsers.find(u => u.phoneNumber === formData.phoneNumber);
+    if (userExists) {
+      toast.error('An account with this phone number already exists!');
+      return;
+    }
+
+    // 3. Add the new user to the array
+    const updatedUsers = [...existingUsers, formData];
+
+    // 4. Save the updated list and also set the "current session" user
+    localStorage.setItem('allUsers', JSON.stringify(updatedUsers));
+    localStorage.setItem('userAccount', JSON.stringify(formData)); 
+
     toast.success('Account created successfully!');
-    // ADDED: Delay navigation so user can see the success toast
     setTimeout(() => navigate('/BusinessJourney'), 1000);
   };
 

@@ -5,6 +5,8 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 // ADDED: Import toast and Toaster
 import toast, { Toaster } from 'react-hot-toast';
 
+
+
 const YourIdeaScreen = () => {
   const navigate = useNavigate();
   const [ideaData, setIdeaData] = useState({ businessIdea: '', problemSolved: '' });
@@ -15,10 +17,11 @@ const YourIdeaScreen = () => {
     setIdeaData(prev => ({ ...prev, [name]: value }));
   };
 
+
   const getAISuggestedIndustry = async (idea, problem) => {
     try {
-      const genAI = new GoogleGenerativeAI("AIzaSyCkr3ExXNTlq3ZOJO8DRaSqaSx2dCpRdrk");
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+            const genAI = new GoogleGenerativeAI("AIzaSyCvDPGH154PJk1pakpHV_PVgq9erhld2Is");
+            const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
       const prompt = `A user has a business idea: "${idea}". The problem it solves is: "${problem}". Based on this, choose the best industry ID from this list: - beauty, - retail, - small-scale, - service, - fashion. Return ONLY the word of the ID. No sentences. No punctuation.`;
       const result = await model.generateContent(prompt);
       const response = await result.response;
