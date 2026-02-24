@@ -137,8 +137,13 @@ const LoginScreen = () => {
           Login
         </PrimaryButton>
 
+        {/* Footer Link */}
+        <p className="text-center text-sm text-slate-600 my-4 font-sans">
+          Don&apos;t have an account? <button onClick={() => navigate('/signup')} className="text-primary font-semibold hover:underline cursor-pointer">Create Account</button>
+        </p>
+
         {/* Divider */}
-        <div className="flex items-center gap-4 my-6">
+        <div className="flex items-center gap-4 mb-6">
           <div className="flex-1 h-px bg-gray-100" />
           <span className="text-gray-400 text-xs">Or</span>
           <div className="flex-1 h-px bg-gray-100" />
@@ -160,12 +165,8 @@ const LoginScreen = () => {
           </button>
         </div>
 
-        {/* Footer Link */}
-        <p className="text-center text-xs text-slate-600 mt-8 font-sans">
-          Don’t have an account? <button onClick={() => navigate('/signup')} className="text-primary font-semibold hover:underline cursor-pointer">Create Account</button>
-        </p>
       </div>
-    </PageWrapper>
+    </PageWrapper >
   );
 };
 

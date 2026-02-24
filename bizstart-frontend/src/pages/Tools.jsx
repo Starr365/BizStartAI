@@ -3,8 +3,6 @@ import { ArrowLeft, Sparkles, FileText, BookOpen, BarChart3 } from "lucide-react
 import { useNavigate } from "react-router-dom";
 import BottomNav from "../components/BottomNav";
 
-const PRIMARY = "#6E62B1";
-
 const Header = () => (
   <div className="sticky top-0 bg-white z-20 px-4 py-3 shadow-sm flex items-center justify-center">
     <button className="absolute left-4 p-2 rounded-xl bg-gray-100">
@@ -22,10 +20,7 @@ const ToolCard = ({ icon, title, description, onClick }) => {
       onClick={onClick}
       className="bg-gray-50 rounded-2xl p-4 shadow-sm flex gap-3 items-start cursor-pointer hover:shadow-md transition"
     >
-      <div
-        className="p-2 rounded-lg"
-        style={{ backgroundColor: "#F3F2FA", color: PRIMARY }}
-      >
+      <div className="p-2 rounded-lg bg-primary-light text-primary">
         {IconComponent && <IconComponent size={20} />}
       </div>
 
@@ -53,10 +48,7 @@ const Tools = () => {
             and grow your business.
           </p>
 
-          <div
-            className="rounded-2xl p-5 text-white flex justify-between items-center mb-6"
-            style={{ backgroundColor: PRIMARY }}
-          >
+          <div className="rounded-2xl p-5 text-white flex justify-between items-center mb-6 bg-primary">
             <div className="flex gap-3 items-start">
               <Sparkles className="mt-1" />
               <p className="text-sm">

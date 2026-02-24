@@ -88,8 +88,7 @@ const SelectIndustryScreen = () => {
               <img
                 src={currentSelection.img}
                 alt="Icon"
-                style={{ filter: 'brightness(0) invert(1)' }}
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain brightness-0 invert"
               />
             </div>
             <div className="flex flex-col gap-1">
@@ -107,14 +106,8 @@ const SelectIndustryScreen = () => {
           </p>
 
           <div
-            className="w-full flex flex-col gap-2.5 overflow-y-auto max-h-56 pr-1 mb-6"
-            style={{
-              scrollbarWidth: 'none',
-              msOverflowStyle: 'none',
-              WebkitOverflowScrolling: 'touch'
-            }}
+            className="w-full flex flex-col gap-2.5 overflow-y-auto max-h-56 pr-1 mb-6 hide-scrollbar"
           >
-            <style>{`div::-webkit-scrollbar { display: none; }`}</style>
             {otherIndustries.map((item) => (
               <div
                 key={item.id}

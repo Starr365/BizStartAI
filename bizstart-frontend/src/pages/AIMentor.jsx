@@ -18,12 +18,7 @@ const ChatMessage = ({ text, sender }) => {
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-3`}>
       <div
-        className="max-w-[80%] p-3 rounded-2xl text-sm"
-        style={{
-          backgroundColor: isUser ? PRIMARY : "#F3F2FA",
-          color: isUser ? "white" : "#1A1426",
-          whiteSpace: "pre-wrap" // Added: This ensures line breaks from AI look organized
-        }}
+        className={`max-w-[80%] p-3 rounded-2xl text-sm whitespace-pre-wrap ${isUser ? "bg-primary text-white" : "bg-primary-light text-dark"}`}
       >
         {text}
       </div>
@@ -34,8 +29,7 @@ const ChatMessage = ({ text, sender }) => {
 const SuggestionCard = ({ text, onClick }) => (
   <button
     onClick={onClick}
-    className="px-4 py-2 rounded-2xl text-sm shadow-sm border"
-    style={{ backgroundColor: "#F3F2FA", borderColor: PRIMARY, color: "#1A1426" }}
+    className="px-4 py-2 rounded-2xl text-sm shadow-sm border bg-primary-light border-primary text-dark"
   >
     {text}
   </button>
@@ -52,16 +46,15 @@ const ChatInput = ({ onSend }) => {
     /* Changed: Wrapped in a div with bottom-[56px] to sit exactly above the BottomNav */
     <div className="fixed bottom-[56px] left-0 w-full bg-white border-t z-40">
       <div className="flex items-center px-4 py-3 gap-2">
-        <button style={{ color: PRIMARY }}><Mic /></button>
+        <button className="text-primary"><Mic /></button>
         <input
           type="text"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Ask your AI mentor..."
-          className="flex-1 border rounded-full px-4 py-2 focus:outline-none"
-          style={{ borderColor: PRIMARY }}
+          className="flex-1 border rounded-full px-4 py-2 focus:outline-none border-primary"
         />
-        <button onClick={handleSend} className="p-2 rounded-full text-white" style={{ backgroundColor: PRIMARY }}>
+        <button onClick={handleSend} className="p-2 rounded-full text-white bg-primary">
           <Send size={18} />
         </button>
       </div>
@@ -155,7 +148,7 @@ const AIMentor = () => {
       {/* Changed: pb-40 ensures you can scroll past the fixed input and nav bar */}
       <div className="flex-1 overflow-y-auto p-4 space-y-2 pb-40">
         {messages.map((m, i) => <ChatMessage key={i} {...m} />)}
-        {isTyping && <div className="text-xs animate-pulse" style={{ color: PRIMARY }}>Paddy is thinking...</div>}
+        {isTyping && <div className="text-xs animate-pulse text-primary">Paddy is thinking...</div>}
         <div ref={scrollRef} />
       </div>
 

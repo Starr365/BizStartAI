@@ -40,11 +40,7 @@ export default function BusinessInfo() {
                   <div key={index} className="flex flex-col items-center flex-1">
 
                     <div
-                      className={`w-10 h-10 flex items-center justify-center rounded-full text-sm font-medium ${active ? "text-white" : "text-gray-500 bg-gray-200"
-                        }`}
-                      style={{
-                        backgroundColor: active ? PRIMARY : "#E5E5E5",
-                      }}
+                      className={`w-10 h-10 flex items-center justify-center rounded-full text-sm font-medium ${active ? "text-white bg-primary" : "text-gray-500 bg-border-light"}`}
                     >
                       {step}
                     </div>
@@ -80,8 +76,7 @@ export default function BusinessInfo() {
               </label>
 
               <input
-                className="w-full mt-2 p-4 border rounded-xl outline-none focus:ring-2"
-                style={{ borderColor: "#E5E5E5" }}
+                className="w-full mt-2 p-4 border border-border-light rounded-xl outline-none focus:ring-2"
                 placeholder=""
               />
 
@@ -97,8 +92,7 @@ export default function BusinessInfo() {
               </label>
 
               <input
-                className="w-full mt-2 p-4 border rounded-xl outline-none"
-                style={{ borderColor: "#E5E5E5" }}
+                className="w-full mt-2 p-4 border border-border-light rounded-xl outline-none"
               />
 
               <p className="text-sm text-gray-400 mt-2">
@@ -114,8 +108,7 @@ export default function BusinessInfo() {
 
               <textarea
                 rows={4}
-                className="w-full mt-2 p-4 border rounded-xl outline-none resize-none"
-                style={{ borderColor: "#E5E5E5" }}
+                className="w-full mt-2 p-4 border border-border-light rounded-xl outline-none resize-none"
               />
 
               <p className="text-sm text-gray-400 mt-2">
@@ -126,8 +119,7 @@ export default function BusinessInfo() {
           </div>
           <button
             onClick={() => navigate("/market")}
-            className="w-full mt-8 py-4 rounded-xl text-white font-semibold shadow-md"
-            style={{ backgroundColor: PRIMARY }}
+            className="w-full mt-8 py-4 rounded-xl text-white font-semibold shadow-md bg-primary"
           >
             Next
           </button>

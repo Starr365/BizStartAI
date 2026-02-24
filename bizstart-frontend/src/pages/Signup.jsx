@@ -160,7 +160,7 @@ const SignupScreen = () => {
         </PrimaryButton>
 
         {/* Existing User Login Link */}
-        <p className="text-center text-xs text-slate-600 mt-6 font-sans">
+        <p className="text-center text-sm text-slate-600 mt-4 font-sans">
           Already have an account? <button onClick={() => navigate('/login')} className="text-primary font-semibold hover:underline cursor-pointer">Login</button>
         </p>
 

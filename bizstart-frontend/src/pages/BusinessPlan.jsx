@@ -1,10 +1,11 @@
 import React from "react";
 import { ArrowLeft, HelpCircle, Bot, Pencil, Download } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import BottomNav from "../components/BottomNav";
+import PrimaryButton from "../components/PrimaryButton";
 
 export default function BusinessPlan() {
   const navigate = useNavigate();
-  const userName = "Sarah";
 
   const steps = [
     {
@@ -35,7 +36,7 @@ export default function BusinessPlan() {
       <div className="w-full max-w-md md:max-w-5xl bg-white md:shadow-xl md:rounded-2xl flex flex-col h-screen">
 
         {/* Header */}
-        <div className="sticky top-0 z-20 bg-white px-6 py-4 border-b flex items-center justify-center relative">
+        <div className="top-0 z-20 bg-white px-6 py-4 border-b flex items-center justify-center relative">
           <button className="absolute left-6 p-2 rounded-xl shadow-sm bg-gray-100">
             <ArrowLeft size={20} />
           </button>
@@ -61,7 +62,7 @@ export default function BusinessPlan() {
                 key={index}
                 className="flex gap-4 p-4 border rounded-xl bg-white shadow-sm"
               >
-                <div className="text-[#6E62B1]">{step.icon}</div>
+                <div className="text-primary">{step.icon}</div>
                 <div>
                   <h3 className="font-medium">{step.title}</h3>
                   <p className="text-sm text-gray-500">{step.desc}</p>
@@ -71,40 +72,17 @@ export default function BusinessPlan() {
           </div>
 
           {/* CTA */}
-          <button
+          <PrimaryButton
             onClick={() => navigate("/business-info")}
-            className="w-full mt-8 py-4 rounded-xl text-white font-semibold shadow-md"
-            style={{ backgroundColor: "#6E62B1" }}
+            className="mt-8 shadow-md"
           >
             Start Creating your Plan
-          </button>
+          </PrimaryButton>
 
         </div>
 
-        {/* Bottom Navigation (Mobile Only) */}
-        <div className="md:hidden sticky bottom-0 border-t bg-white flex justify-around py-3 text-xs">
-
-          <div className="flex flex-col items-center text-gray-400">
-            <span>🏠</span>
-            Home
-          </div>
-
-          <div className="flex flex-col items-center text-[#6E62B1] font-medium">
-            <span>🧰</span>
-            Tools
-          </div>
-
-          <div className="flex flex-col items-center text-gray-400">
-            <span>🤖</span>
-            AI Mentor
-          </div>
-
-          <div className="flex flex-col items-center text-gray-400">
-            <span>👤</span>
-            Profile
-          </div>
-
-        </div>
+        {/* Bottom Navigation */}
+        <BottomNav />
       </div>
     </div>
   );

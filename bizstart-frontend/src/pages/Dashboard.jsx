@@ -97,7 +97,7 @@ const Dashboard = () => {
           <Bell stroke="black" size={22} className="cursor-pointer" />
         </div>
 
-        <div style={{ backgroundColor: "#6E62B1" }} className="text-white rounded-2xl p-4">
+        <div className="bg-primary text-white rounded-2xl p-4">
           <p className="font-semibold">Welcome {userName}, I am your business paddy!</p>
           <p className="text-sm opacity-90 mt-1">
             You're at the beginning of an exciting journey. Let’s turn your idea into reality together!
@@ -127,8 +127,7 @@ const Dashboard = () => {
                     </div>
                   </div>
                   <button
-                    style={{ backgroundColor: "#6E62B1" }}
-                    className="text-white px-4 py-2 rounded-lg text-sm mt-4 md:mt-auto self-start cursor-pointer transition-all active:scale-95"
+                    className="bg-primary text-white px-4 py-2 rounded-lg text-sm mt-4 md:mt-auto self-start cursor-pointer transition-all active:scale-95"
                   >
                     Start
                   </button>
