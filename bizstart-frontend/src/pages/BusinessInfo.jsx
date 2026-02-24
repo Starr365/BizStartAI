@@ -148,6 +148,13 @@ export default function BusinessInfo() {
             </div>
 
           </div>
+          <button
+              onClick={() => navigate("/market")}
+              className="w-full mt-8 py-4 rounded-xl text-white font-semibold shadow-md"
+              style={{ backgroundColor: PRIMARY }}
+            >
+              Next
+            </button>
         </div>
 
         {/* Bottom Nav */}
