@@ -1,7 +1,9 @@
 import React from "react";
 import { ArrowLeft, HelpCircle, Bot, Pencil, Download } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function BusinessPlan() {
+  const navigate = useNavigate();
   const userName = "Sarah";
 
   const steps = [
@@ -70,6 +72,7 @@ export default function BusinessPlan() {
 
           {/* CTA */}
           <button
+            onClick={() => navigate("/business-info")}
             className="w-full mt-8 py-4 rounded-xl text-white font-semibold shadow-md"
             style={{ backgroundColor: "#6E62B1" }}
           >

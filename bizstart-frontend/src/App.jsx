@@ -16,6 +16,7 @@ import ProgressDashboard from "./pages/ProgressDashboard";
 import AIMentor from "./pages/AIMentor";
 import Tools from './pages/Tools';
 import BusinessPlan from './pages/BusinessPlan';
+import BusinessInfo from "./pages/BusinessInfo";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
 // 1. Define the App component first
@@ -39,6 +40,7 @@ function App() {
           <Route path="/chat" element={<AIMentor />} />
           <Route path="/tools" element={<Tools />}/>
           <Route path="/business-plan" element={<BusinessPlan />}/>
+          <Route path="/business-info" element={<BusinessInfo />}/>
         </Routes>
       </main>
     </div>
