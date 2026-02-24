@@ -25,7 +25,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'                     # Updated to 20
+          node-version: '20'                     # Updated to 20 for compatibility
           cache: 'npm'
           cache-dependency-path: ${{ env.WORKING_DIR }}/package-lock.json
 
@@ -40,7 +40,6 @@ jobs:
       - name: Install Vercel CLI globally
         run: npm install --global vercel@latest
 
-      # No need for vercel pull if we use the environment variables directly
       - name: Build project artifacts
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
         working-directory: ${{ env.WORKING_DIR }}
@@ -52,9 +51,11 @@ jobs:
         id: deploy
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
+            # Deploy as preview
             vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} > deployment_url.txt
             echo "url=$(cat deployment_url.txt)" >> $GITHUB_OUTPUT
           else
+            # Deploy to production
             vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
           fi
         working-directory: ${{ env.WORKING_DIR }}
