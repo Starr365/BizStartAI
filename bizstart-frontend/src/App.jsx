@@ -52,6 +52,8 @@ function App() {
           <Route path="/business-info" element={<BusinessInfo />} />
         </Routes>
       </main>
+iu
+
     </div>
   );
 }
