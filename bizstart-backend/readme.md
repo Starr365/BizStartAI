@@ -1,416 +1,138 @@
-# BizStart AI – Backend API
+# BizStart AI - Backend API Gateway
 
-## Overview
+Welcome to the BizStart AI Backend repository! This Node.js/Express server acts as the central API Gateway, managing user authentication, TiDB database operations, and securely proxying AI requests to the Data Science RAG pipeline.
 
-The BizStart AI backend is a RESTful API built with:
-
-* **Node.js**
-* **Express.js**
-* **Sequelize ORM (MySQL)**
-* **JWT Authentication**
-* **Joi Validation**
-* **Rate Limiting**
-* **Centralized Error Handling**
-* **AI Service Abstraction Layer**
-
-This backend handles:
-
-* User authentication
-* Conversation management
-* Message handling
-* AI response integration (via service abstraction)
-* Secure, validated API access
+### Live API Base URL
+**Production:** `https://bizstartai-backend.onrender.com/api`
 
 ---
 
-# Backend Architecture
+## Backend Architecture
 
-The backend follows a layered architecture:
+The backend follows a layered API Gateway architecture to separate concerns, protect the database, and securely route AI requests.
 
-```
-Client (Frontend)
-        ↓
-Routes
-        ↓
-Middleware (Auth, Validation, Rate Limit)
-        ↓
-Controllers
-        ↓
-Services (AI abstraction)
-        ↓
+```text
+Client (React Frontend)
+        |
+Routes (/api/auth, /api/ai, etc.)
+        |
+Middleware (JWT Auth, Joi Validation, Rate Limiting)
+        |
+Controllers (Business Logic & Request Handling)
+        |
+Services / API Gateway (Proxy to Data Science RAG API)
+        |
 Models (Sequelize ORM)
-        ↓
-Database (MySQL)
-```
+        |
+Database (TiDB / MySQL)
 
-### Architectural Principles
-
-* Separation of concerns
-* Centralized error handling
-* Input validation before controller execution
-* Authentication middleware for protected routes
-* AI logic isolated in service layer
-* Rate limiting applied to expensive endpoints
-
----
-
-# Project Structure
-
-```
-bizstart-backend/
-├── src/
-│   ├── config/
-│   │   └── database.js
-│   ├── controllers/
-│   │   ├── auth.controller.js
-│   │   ├── conversation.controller.js
-│   │   └── message.controller.js
-│   ├── routes/
-│   │   ├── auth.routes.js
-│   │   ├── conversation.routes.js
-│   │   ├── message.routes.js
-│   │   └── user.routes.js
-│   ├── middleware/
-│   │   ├── auth.middleware.js
-│   │   ├── error.middleware.js
-│   │   ├── rateLimit.middleware.js
-│   │   └── validate.middleware.js
-│   ├── models/
-│   │   ├── user.model.js
-│   │   ├── conversation.model.js
-│   │   └── message.model.js
-│   ├── services/
-│   │   └── ai.service.js
-│   ├── validators/
-│   │   ├── auth.validator.js
-│   │   ├── conversation.validator.js
-│   │   └── message.validator.js
-│   ├── utils/
-│   │   └── AppError.js
-│   ├── app.js
-│   └── server.js
-├── .env
-├── package.json
-└── README.md
 ```
 
 ---
 
-# API Base URL
+## Documentation Directory
 
-```
-http://localhost:5000/api
-```
+To keep this repository clean and organized for a cross-functional team, role-specific documentation is separated into the `docs/` folder. Please read the document relevant to your track:
+
+* **[Frontend Team: API Integration Guide](https://www.google.com/search?q=./docs/frontend-integration.md)** - Details on all endpoints, JSON bodies, authentication headers, and alias routes.
+* **[Cybersecurity Team: Security & Audit Overview](https://www.google.com/search?q=./docs/security-audit.md)** - Details on JWT handling, bcrypt hashing, database encryption, and proxy attack surfaces.
+* **[DevOps Team: Deployment Guide](https://www.google.com/search?q=./docs/devops-deployment.md)** - Infrastructure setup, CORS configuration, and server requirements.
+* **[Data Science Team: RAG API Proxy Guide](https://www.google.com/search?q=./docs/data-science-proxy.md)** - Contract for the JSON payloads sent between this Node.js API Gateway and the Rust/Python RAG pipeline.
 
 ---
+
+## Tech Stack Overview
+
+* **Runtime:** Node.js
+* **Framework:** Express.js
+* **Database:** TiDB (MySQL compatible)
+* **ORM:** Sequelize
+* **Authentication:** JWT (Local Auth) & Google Auth Library (OAuth 2.0)
+* **Rate Limiting:** express-rate-limit
+
+---
+
+## Environment Variables
+
+Create a `.env` file in the root directory and configure the following variables before running the server:
+
+```env
+# Server & Network
+PORT=5000
+FRONTEND_URL=http://localhost:5173
+
+# Database (TiDB)
+DB_HOST=localhost
+DB_PORT=4000
+DB_NAME=bizstart_db
+DB_USER=root
+DB_PASSWORD=your_db_password
 
 # Authentication
+JWT_SECRET=your_super_secret_jwt_key
+GOOGLE_CLIENT_ID=your_google_cloud_oauth_client_id
 
-Authentication uses:
+# Microservices
+AI_SERVICE_URL=[https://biz-start-ai-rust.vercel.app](https://biz-start-ai-rust.vercel.app)
 
-* JWT tokens
-* Bearer authentication
-* Password hashing with bcrypt
-
-All protected routes require:
-
-```
-Authorization: Bearer <token>
 ```
 
 ---
 
-# API Endpoints
+## Local Setup Instructions
 
-## Auth Routes
-
-### Register User
-
-```
-POST /api/auth/register
-```
-
-Request Body:
-
-```json
-{
-  "name": "Jane Doe",
-  "email": "jane@example.com",
-  "password": "password123"
-}
-```
-
-Response:
-
-```json
-{
-  "success": true,
-  "message": "User registered successfully",
-  "data": {
-    "id": 1,
-    "name": "Jane Doe",
-    "email": "jane@example.com"
-  }
-}
-```
-
----
-
-### Login User
+1. **Clone the repository:**
+```bash
+git clone [https://github.com/Starr365/BizStartAI.git](https://github.com/Starr365/BizStartAI.git)
+cd BizStartAI/bizstart-backend
 
 ```
-POST /api/auth/login
-```
 
-Request Body:
 
-```json
-{
-  "email": "jane@example.com",
-  "password": "password123"
-}
-```
-
-Response:
-
-```json
-{
-  "success": true,
-  "message": "Login successful",
-  "token": "JWT_TOKEN"
-}
-```
-
----
-
-## Conversation Routes (Protected)
-
-### Create Conversation
-
-```
-POST /api/conversations
-```
-
-Request Body:
-
-```json
-{
-  "title": "Business Idea Discussion"
-}
-```
-
----
-
-### Get All User Conversations
-
-```
-GET /api/conversations
-```
-
-Returns all conversations belonging to authenticated user.
-
----
-
-### Get Single Conversation
-
-```
-GET /api/conversations/:id
-```
-
----
-
-## Message Routes (Protected)
-
-### Send Message (Triggers AI)
-
-```
-POST /api/messages
-```
-
-Request Body:
-
-```json
-{
-  "conversation_id": 1,
-  "content": "How do I start a small bakery business?"
-}
-```
-
-Response:
-
-```json
-{
-  "success": true,
-  "data": {
-    "userMessage": { ... },
-    "aiMessage": { ... }
-  }
-}
-```
-
-Note:
-
-* This endpoint is rate limited.
-* AI response is handled through `ai.service.js`.
-
----
-
-### Get Messages by Conversation (Paginated)
-
-```
-GET /api/messages/:conversationId?page=1&limit=10
-```
-
-Query Parameters:
-
-* page (default: 1)
-* limit (default: 10)
-
----
-
-# AI Service Integration
-
-The backend does not directly embed AI logic in controllers.
-
-Instead:
-
-```
-controllers → ai.service.js → external AI API
-```
-
-Current implementation is abstracted to allow:
-
-* Hugging Face integration
-* Custom ML API
-* Microservice-based AI system
-
-Expected AI response format:
-
-```json
-{
-  "text": "Generated AI response",
-  "tokens_used": 120
-}
-```
-
----
-
-# Database
-
-Database: MySQL
-ORM: Sequelize
-
-Models:
-
-* User
-* Conversation
-* Message
-
-Relationships:
-
-* User has many Conversations
-* Conversation has many Messages
-* Message belongs to Conversation
-* Conversation belongs to User
-
-Tables are created using:
-
-```
-sequelize.sync()
-```
-
----
-
-# Middleware
-
-### Authentication Middleware
-
-Verifies JWT and attaches `req.user`.
-
-### Validation Middleware
-
-Validates request body using Joi schemas.
-
-### Error Middleware
-
-Centralized error formatting using `AppError`.
-
-### Rate Limiting
-
-* Global limiter on `/api`
-* Strict limiter on `/api/messages`
-
----
-
-# Environment Variables
-
-Create `.env` file:
-
-```
-PORT=5000
-DB_NAME=bizstart_ai
-DB_USER=root
-DB_PASSWORD=yourpassword
-DB_HOST=localhost
-JWT_SECRET=supersecretkey
-FRONTEND_URL=http://localhost:5173
-AI_SERVICE_URL=
-HF_API_KEY=
-```
-
----
-
-# Setup Instructions
-
-1. Clone repository:
-
-```
-git clone <repo-url>
-```
-
-2. Install dependencies:
-
-```
+2. **Install dependencies:**
+```bash
 npm install
-```
-
-3. Configure `.env`
-
-4. Start server:
 
 ```
+
+
+3. **Configure environment variables:**
+Copy the `.env.example` file to `.env` and fill in your local database credentials and API keys.
+4. **Start the development server:**
+```bash
 npm run dev
+
+```
+
+
+*The server will start on `http://localhost:5000` (or your configured port) and Sequelize will automatically synchronize your database tables.*
+
+---
+
+## Branching Strategy
+
+* `main` -> Stable production branch (Deployed to Render).
+* `feature/backend-mvp` -> Active development branch for the Minimum Viable Product.
+* `feature/<feature-name>` -> For any new isolated features (e.g., `feature/course-migrations`).
+
 ```
 
 ---
 
-# Production Readiness Features
+And here is the matching **`.env.example`** file to commit alongside it:
 
-* Structured architecture
-* Secure password hashing
-* JWT authentication
-* Input validation
-* Rate limiting
-* Centralized error handling
-* Service abstraction layer for AI
-* Pagination support
+```env
+PORT=
+FRONTEND_URL=
+AI_SERVICE_URL=
 
----
+DB_HOST=
+DB_PORT=4000
+DB_NAME=
+DB_USER=
+DB_PASSWORD=
 
-# Branch Strategy
+JWT_SECRET=
+GOOGLE_CLIENT_ID=
 
-* main → stable production branch
-* feature/backend-mvp → initial full backend implementation
-* future features → feature/<feature-name>
-
----
-
-# Future Improvements
-
-* Convert to Sequelize migrations
-* Add Redis for distributed rate limiting
-* Add logging system (Winston / Morgan)
-* Add Docker support
-* Add Swagger/OpenAPI documentation
-* Deploy to cloud (Render, Railway, AWS)
-
+```

@@ -5,10 +5,12 @@ const User = require("../models/user.model");
 const { register, login } = require("../controllers/auth.controller");
 const validate = require("../middleware/validate.middleware");
 const { registerSchema, loginSchema } = require("../validators/auth.validator");
+const { register, login, googleLogin } = require('../controllers/auth.controller');
 
 // Standard Local Routes
 router.post("/register", validate(registerSchema), register);
 router.post("/login", validate(loginSchema), login);
+router.post('/google', googleLogin);
 
 // New Google Auth Route
 router.post("/google", async (req, res, next) => {

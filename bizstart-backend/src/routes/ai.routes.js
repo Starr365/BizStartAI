@@ -50,7 +50,7 @@ router.post("/suggest-industry", async (req, res, next) => {
   }
 });
 
-// 2. AI Mentor Chat Endpoint (NEW!)
+// 2. AI Mentor Chat Endpoint
 router.post("/chat", authenticate, async (req, res, next) => {
   try {
     const { message } = req.body;
@@ -93,6 +93,35 @@ router.post("/chat", authenticate, async (req, res, next) => {
       success: false, 
       reply: "I'm having trouble connecting to my servers. Please try again in a moment!" 
     }); 
+  }
+});
+
+// 3. AI Course Recommendations (NEW! Fixes the Frontend Dashboard Crash)
+router.post("/recommendations", async (req, res, next) => {
+  try {
+    const { businessName, industry, stage } = req.body;
+
+    // We return customized mock data based on what the user sent.
+    const recommendations = [
+      { 
+        title: "Market Entry Strategy", 
+        description: `Learn how to find customers for your ${industry || 'new'} business.`, 
+        lessons: 5, 
+        duration: 25,
+        level: "Beginner"
+      },
+      { 
+        title: "Scaling Operations", 
+        description: `Build a solid growth plan for your ${stage || 'early'} stage idea.`, 
+        lessons: 4, 
+        duration: 20,
+        level: stage === 'growth' ? "Advanced" : "Beginner"
+      }
+    ];
+
+    res.status(200).json({ success: true, data: recommendations });
+  } catch (error) {
+    next(error);
   }
 });
 
