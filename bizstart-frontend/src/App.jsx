@@ -60,8 +60,6 @@ function App() {
           <Route path="/edit-section" element={<EditSection />} />
         </Routes>
       </main>
-iu
-
     </div>
   );
 }

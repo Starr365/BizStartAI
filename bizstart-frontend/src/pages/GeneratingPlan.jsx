@@ -1,44 +1,25 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-
-const PRIMARY = "#6E62B1";
+import PageWrapper from "../components/PageWrapper";
 
 export default function GeneratingPlan() {
-  const navigate = useNavigate();
-
   return (
-    <div className="flex justify-center items-center min-h-screen bg-white px-6 text-center">
+    <PageWrapper>
 
-      <div className="max-w-sm w-full">
+      <div className="flex flex-col items-center justify-center text-center py-12">
 
-        {/* Spinner */}
-        <div className="flex justify-center mb-8">
-          <div className="w-16 h-16 border-4 border-gray-200 border-t-[4px] rounded-full animate-spin"
-            style={{ borderTopColor: PRIMARY }}
-          />
-        </div>
+        <div className="w-16 h-16 border-4 border-gray-200 border-t-[#6E62B1] rounded-full animate-spin mb-6" />
 
-        <h2 className="text-lg font-semibold mb-2">
+        <h2 className="text-xl font-semibold mb-2">
           Creating your Business Plan
         </h2>
 
-        <p className="text-gray-500 mb-8">
-          BizStart AI is analyzing your information and generating professional content.
+        <p className="text-gray-500 max-w-sm">
+          BizStart AI is analyzing your information and generating
+          professional content for each section.
         </p>
 
-        <button
-          onClick={() => navigate("/your-plan")}
-          className="w-full py-3 rounded-xl text-white font-medium"
-          style={{ backgroundColor: PRIMARY }}
-        >
-          Apply AI Enhancement
-        </button>
-
-        <button className="w-full py-3 rounded-xl border mt-3">
-          Regenerate Section
-        </button>
-
       </div>
-    </div>
+
+    </PageWrapper>
   );
 }

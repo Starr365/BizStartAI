@@ -1,49 +1,37 @@
 import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { Home, Briefcase, MessageSquare, User } from "lucide-react";
 
-const BottomNav = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const currentPath = location.pathname.toLowerCase();
+const PRIMARY = "#6E62B1";
 
-  const isActive = (path) => currentPath.startsWith(path);
-
+export default function BottomNav() {
   return (
-    <div className="fixed bottom-0 left-0 w-full md:hidden border-t bg-white flex justify-around items-center text-[10px] py-2 shadow-lg z-50">
-      <div
-        className={`flex flex-col items-center gap-1 cursor-pointer transition-colors ${isActive('/dashboard') ? 'text-primary font-medium' : 'text-gray-500 hover:text-primary'}`}
-        onClick={() => navigate('/dashboard')}
-      >
-        <Home size={20} />
-        <span>Home</span>
-      </div>
-
-      <div
-        className={`flex flex-col items-center gap-1 cursor-pointer transition-colors ${isActive('/tools') ? 'text-primary font-medium' : 'text-gray-500 hover:text-primary'}`}
-        onClick={() => navigate('/tools')}
-      >
-        <Briefcase size={20} />
-        <span>Tools</span>
-      </div>
-
-      <div
-        className={`flex flex-col items-center gap-1 cursor-pointer transition-colors ${isActive('/chat') ? 'text-primary font-medium' : 'text-gray-500 hover:text-primary'}`}
-        onClick={() => navigate('/chat')}
-      >
-        <MessageSquare size={20} />
-        <span>AI Mentor</span>
-      </div>
-
-      <div
-        className={`flex flex-col items-center gap-1 cursor-pointer transition-colors ${isActive('/profile') ? 'text-primary font-medium' : 'text-gray-500 hover:text-primary'}`}
-        onClick={() => navigate('/profile')}
-      >
-        <User size={20} />
-        <span>Profile</span>
-      </div>
+    <div className="
+      fixed bottom-0 left-0 right-0
+      md:bottom-6 md:left-1/2 md:-translate-x-1/2 md:w-auto
+      bg-white border md:shadow-lg
+      flex justify-around gap-8
+      px-6 py-3
+      text-xs
+      rounded-none md:rounded-xl
+      z-50
+    ">
+      <NavItem label="Home" icon="🏠" />
+      <NavItem label="Tools" icon="🧰" active />
+      <NavItem label="AI Mentor" icon="🤖" />
+      <NavItem label="Profile" icon="👤" />
     </div>
   );
-};
+}
 
-export default BottomNav;
+function NavItem({ label, icon, active }) {
+  return (
+    <div
+      className={`flex flex-col items-center ${
+        active ? "font-medium" : "text-gray-400"
+      }`}
+      style={{ color: active ? "#6E62B1" : "" }}
+    >
+      <span>{icon}</span>
+      {label}
+    </div>
+  );
+}

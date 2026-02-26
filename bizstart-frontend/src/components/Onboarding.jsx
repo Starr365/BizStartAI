@@ -1,107 +1,90 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import Onboarding from '../assets/OnBoarding.jpg';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import Onboarding from "../assets/OnBoarding.jpg";
 
 const OnboardingScreen = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="fixed inset-0 h-dvh w-full bg-white flex justify-center overflow-hidden">
-      <div 
-        style={{ 
-          width: '100%',
-          maxWidth: '400px', 
-          display: 'flex',
-          flexDirection: 'column',
-          padding: '24px', // Balanced padding
-          height: '100%',
-        }}
-      >
-        {/* 1. This wrapper pushes everything to the middle of the screen */}
-        <div className="flex-1 flex flex-col py-4">
-          
-          {/* Headline Section */}
-          <div className="mb-2">
-            <h1 
-              style={{ 
-                fontFamily: "'-apple-system', 'SF Pro', 'Inter', sans-serif",
-                fontWeight: '500', 
-                fontSize: '32px',
-                lineHeight: '110%',
-                color: '#1A1A1A',
-              }}
-            >
-              Learn at Your Pace
-            </h1>
-          </div>
+    <div className="fixed inset-0 bg-white flex justify-center overflow-hidden">
 
-          {/* Description Text */}
-          <p 
-            style={{ 
-              fontFamily: "'Inter', sans-serif",
-              fontSize: '17px',
-              fontWeight: '100',
-              lineHeight: '140%',
-              letterSpacing: '-0.02em',
-              color: '#666666',
-            }}
-          >
-            Quick lessons on everything market research to financial planning for busy entrepreneurs.
+      {/* ================= MOBILE ================= */}
+      <div className="w-full max-w-[400px] flex flex-col p-6 md:hidden">
+        
+        <div className="flex-1 flex flex-col">
+          <h1 className="text-3xl font-semibold text-slate-900">
+            Learn at Your Pace
+          </h1>
+
+          <p className="mt-3 text-gray-500">
+            Quick lessons on everything from market research 
+            to financial planning.
           </p>
 
-          {/* Illustration Section */}
-          <div className="flex flex-col items-center pt-8"> 
-            <div className="w-full flex justify-center" style={{ height: '300px' }}>
-              <img 
-                src={Onboarding}
-                alt="Learning illustration" 
-                className="h-full w-auto object-contain"
-                loading="eager"
-              />
-            </div>
-
-            {/* Pagination Dots */}
-            <div className="flex items-center justify-center gap-4 mt-6 mb-8">
-              <div className="w-2 h-2 rounded-full bg-[#D9D9D9]" />
-              <div className="flex items-center justify-center w-4 h-4 border border-slate-900 rounded-full">
-                <div className="w-2 h-2 rounded-full bg-slate-900" />
-              </div>
-              <div className="w-2 h-2 rounded-full bg-[#D9D9D9]" />
-            </div>
+          <div className="flex justify-center mt-8">
+            <img
+              src={Onboarding}
+              alt="Learning"
+              className="h-[280px] object-contain"
+            />
           </div>
 
-          {/* Action Buttons - Constrained width so they look medium on desktop */}
-          <div className="flex flex-col gap-3 mx-auto w-full max-w-[320px]">
-            <button 
-              onClick={() => navigate('/Signup')}
-              style={{ 
-                backgroundColor: '#6E62B1',
-                fontFamily: "'Inter', sans-serif",
-                fontWeight: '500',
-                fontSize: '15px',
-                textShadow: '0px 1px 4px rgba(0, 0, 0, 0.40)',
-                boxShadow: '0px 1px 4px 0px rgba(0, 0, 0, 0.40)'
-              }}
-              className="w-full text-white py-3.5 rounded-xl transition-all active:scale-[0.98] cursor-pointer border-none"
+          <div className="mt-8 flex flex-col gap-3">
+            <button
+              onClick={() => navigate("/signup")}
+              className="bg-[#6E62B1] text-white py-3.5 rounded-xl"
             >
               Create Account
             </button>
 
-            <button 
-              onClick={() => navigate('/Login')}
-              style={{ 
-                backgroundColor: '#F5F5F5',
-                fontFamily: "'Inter', sans-serif",
-                fontWeight: '500',
-                fontSize: '15px',
-                color: '#1E293B',
-                
-              }}
-              className="w-full py-3.5 rounded-xl border border-gray-300 transition-all active:scale-[0.98] cursor-pointer"
+            <button
+              onClick={() => navigate("/login")}
+              className="bg-gray-100 py-3.5 rounded-xl border"
             >
               Log In
             </button>
           </div>
+        </div>
+      </div>
+
+      {/* ================= DESKTOP ================= */}
+      <div className="hidden md:flex w-full max-w-6xl items-center justify-between px-20">
+        
+        {/* Left */}
+        <div className="max-w-lg">
+          <h1 className="text-5xl font-semibold text-slate-900">
+            Learn at Your Pace
+          </h1>
+
+          <p className="mt-6 text-lg text-gray-500">
+            Quick lessons on market research, validation, 
+            strategy, and financial planning designed for busy founders.
+          </p>
+
+          <div className="mt-10 flex gap-4">
+            <button
+              onClick={() => navigate("/signup")}
+              className="bg-[#6E62B1] text-white px-8 py-4 rounded-xl shadow-md"
+            >
+              Create Account
+            </button>
+
+            <button
+              onClick={() => navigate("/login")}
+              className="border px-8 py-4 rounded-xl"
+            >
+              Log In
+            </button>
+          </div>
+        </div>
+
+        {/* Right */}
+        <div className="w-[500px]">
+          <img
+            src={Onboarding}
+            alt="Learning"
+            className="w-full object-contain"
+          />
         </div>
       </div>
     </div>

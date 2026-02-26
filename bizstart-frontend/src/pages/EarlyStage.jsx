@@ -138,7 +138,7 @@ const EarlyStageScreen = () => {
           </div>
         </div>
 
-        <div className="w-full flex flex-col gap-4 overflow-y-auto max-h-[60vh] pr-1 mb-6 scrollbar-hide">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 overflow-y-auto max-h-[60vh] pr-1 mb-6 scrollbar-hide">
           <style>{`.scrollbar-hide::-webkit-scrollbar { display: none; }`}</style>
 
           <div className="flex flex-col gap-1.5">
