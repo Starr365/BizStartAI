@@ -21,6 +21,8 @@ import Financials from "./pages/Financials";
 import GeneratingPlan from "./pages/GeneratingPlan";
 import YourPlan from "./pages/YourPlan";
 import EditSection from "./pages/EditSection";
+import MarketInfo from "./pages/MarketInfo";
+import Strategy from "./pages/Strategy";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
 // 1. Define the App component first
