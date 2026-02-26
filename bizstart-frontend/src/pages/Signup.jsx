@@ -19,11 +19,22 @@ const SignupScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const googleLogin = useGoogleLogin({
-    onSuccess: (response) => {
-      console.log("Success! Token:", response.access_token);
-      toast.success('Successfully logged in with Google!');
-      // ADDED: Delay navigation so user can see the success toast
-      setTimeout(() => navigate('/BusinessJourney'), 1000);
+    onSuccess: async (tokenResponse) => {
+      try {
+        // Send the Google token to your backend
+        const res = await api.post('/auth/google', {
+          access_token: tokenResponse.access_token
+        });
+
+        if (res.data.success) {
+          localStorage.setItem('token', res.data.token);
+          localStorage.setItem('userAccount', JSON.stringify(res.data.user));
+          toast.success('Successfully logged in with Google!');
+          setTimeout(() => navigate('/BusinessJourney'), 1000);
+        }
+      } catch (error) {
+        toast.error('Google login failed. Please try again.');
+      }
     },
     onError: () => toast.error('Google Login Failed. Please try again.'),
   });
@@ -43,14 +54,9 @@ const SignupScreen = () => {
     }
 
     try {
-      // Register the user
-      await api.post('/auth/register', {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password
-      });
+      await api.post('/auth/register', formData);
 
-      // Automatically login the user after successful registration
+      // Auto-login
       const loginRes = await api.post('/auth/login', {
         email: formData.email,
         password: formData.password
@@ -58,8 +64,7 @@ const SignupScreen = () => {
 
       if (loginRes.data.success) {
         localStorage.setItem('token', loginRes.data.token);
-        localStorage.setItem('userAccount', JSON.stringify({ name: formData.name, email: formData.email }));
-
+        localStorage.setItem('userAccount', JSON.stringify(loginRes.data.user)); // use data from login
         toast.success('Account created successfully!');
         setTimeout(() => navigate('/BusinessJourney'), 1000);
       }

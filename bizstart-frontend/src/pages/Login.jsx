@@ -15,12 +15,25 @@ const LoginScreen = () => {
   const [password, setPassword] = useState('');
 
   const googleLogin = useGoogleLogin({
-    onSuccess: (tokenResponse) => {
-      console.log("Login Success! Access Token:", tokenResponse.access_token);
-      toast.success('Successfully logged in with Google!');
-      setTimeout(() => navigate('/BusinessJourney'), 1000);
+    scope: 'openid profile email',          // <-- ADD THIS
+    onSuccess: async (tokenResponse) => {
+      try {
+        // Send the ID token (not access_token) to your backend
+        const res = await api.post('/auth/google', {
+          credential: tokenResponse.id_token   // <-- CHANGE THIS
+        });
+
+        if (res.data.success) {
+          localStorage.setItem('token', res.data.token);
+          localStorage.setItem('userAccount', JSON.stringify(res.data.data)); // note: backend returns data
+          toast.success('Successfully logged in with Google!');
+          setTimeout(() => navigate('/BusinessJourney'), 1000);
+        }
+      } catch (error) {
+        toast.error('Google login failed. Please try again.');
+      }
     },
-    onError: () => toast.error("Google Login Failed. Please try again."),
+    onError: () => toast.error('Google Login Failed. Please try again.'),
   });
 
   const handleLogin = async () => {
@@ -34,7 +47,7 @@ const LoginScreen = () => {
 
       if (loginRes.data.success) {
         localStorage.setItem('token', loginRes.data.token);
-        localStorage.setItem('userAccount', JSON.stringify({ email }));
+        localStorage.setItem('userAccount', JSON.stringify(loginRes.data.user));
 
         toast.success('Login successful!');
         setTimeout(() => navigate('/BusinessJourney'), 1000);
