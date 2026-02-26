@@ -34,10 +34,10 @@ Database (TiDB / MySQL)
 
 To keep this repository clean and organized for a cross-functional team, role-specific documentation is separated into the `docs/` folder. Please read the document relevant to your track:
 
-* **[Frontend Team: API Integration Guide](https://www.google.com/search?q=./docs/frontend-integration.md)** - Details on all endpoints, JSON bodies, authentication headers, and alias routes.
-* **[Cybersecurity Team: Security & Audit Overview](https://www.google.com/search?q=./docs/security-audit.md)** - Details on JWT handling, bcrypt hashing, database encryption, and proxy attack surfaces.
-* **[DevOps Team: Deployment Guide](https://www.google.com/search?q=./docs/devops-deployment.md)** - Infrastructure setup, CORS configuration, and server requirements.
-* **[Data Science Team: RAG API Proxy Guide](https://www.google.com/search?q=./docs/data-science-proxy.md)** - Contract for the JSON payloads sent between this Node.js API Gateway and the Rust/Python RAG pipeline.
+* **[Frontend Team: API Integration Guide](bizstart-backend/docs/frontend-integration.md)** - Details on all endpoints, JSON bodies, authentication headers, and alias routes.
+* **[Cybersecurity Team: Security & Audit Overview](bizstart-backend/docs/security-audit.md)** - Details on JWT handling, bcrypt hashing, database encryption, and proxy attack surfaces.
+* **[DevOps Team: Deployment Guide](bizstart-backend/docs/devops-deployment.md)** - Infrastructure setup, CORS configuration, and server requirements.
+* **[Data Science Team: RAG API Proxy Guide](bizstart-backend/docs/data-science-proxy.md)** - Contract for the JSON payloads sent between this Node.js API Gateway and the Rust/Python RAG pipeline.
 
 ---
 
