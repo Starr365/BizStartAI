@@ -10,9 +10,15 @@ const generateAIResponse = async (messages) => {
       };
     }
 
+    // 1. We append the exact endpoint from the Data Science docs
+    const aiEndpoint = `${process.env.AI_SERVICE_URL}/api/query/`;
+
+    // 2. We extract the latest user message to match their "question" format
+    const userQuestion = messages[messages.length - 1].content;
+
     const response = await axios.post(
-      process.env.AI_SERVICE_URL,
-      { messages }, // adapt later if they require different format
+      aiEndpoint,
+      { question: userQuestion }, // Formatted exactly how Data Science wants it
       {
         headers: {
           "Content-Type": "application/json",
@@ -24,9 +30,10 @@ const generateAIResponse = async (messages) => {
       }
     );
 
+    // 3. We map their "answer" field back to the frontend
     return {
-      text: response.data.response || response.data.text,
-      tokens_used: response.data.tokens_used || null,
+      text: response.data.answer || "Sorry, the AI did not return an answer.",
+      tokens_used: null, 
     };
 
   } catch (error) {
