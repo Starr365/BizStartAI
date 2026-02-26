@@ -46,7 +46,7 @@ const register = async (req, res, next) => {
       success: true,
       message: "User registered successfully",
       token,
-      data: {
+      user: { // UPDATED: Changed from 'data' to 'user'
         id: user.id,
         name: user.name,
         email: user.email,
@@ -90,7 +90,7 @@ const login = async (req, res, next) => {
       success: true,
       message: "Login successful",
       token,
-      data: {
+      user: { // UPDATED: Changed from 'data' to 'user'
         id: user.id,
         name: user.name,
         email: user.email,
@@ -143,7 +143,7 @@ const googleLogin = async (req, res, next) => {
       success: true,
       message: "Google login successful",
       token,
-      data: {
+      user: { // UPDATED: Changed from 'data' to 'user'
         id: user.id,
         name: user.name,
         email: user.email
