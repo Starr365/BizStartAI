@@ -8,37 +8,47 @@ const suggestIndustry = async (req, res, next) => {
       return res.status(400).json({ message: "Text prompt is required" });
     }
 
-    // 1. The URL of the Data Science team's pipeline
-    const AI_PIPELINE_URL = process.env.AI_PIPELINE_URL || "http://localhost:5000/api/predict-industry";
+    // 1. Check for the API Key
+    if (!process.env.GEMINI_API_KEY) {
+      console.warn("GEMINI_API_KEY is missing. Falling back to default.");
+      return res.status(200).json({ success: true, industry: "retail" });
+    }
 
-    // 2. Send the text to their AI pipeline
-    const aiResponse = await fetch(AI_PIPELINE_URL, {
+    // 2. The Prompt: Force Gemini to act as a strict classifier
+    const prompt = `You are a strict business classification AI. Read the following business description and categorize it into ONE single word representing the industry (e.g., retail, technology, agriculture, beauty, food, finance). Return ONLY the single word in lowercase, with no punctuation or extra text.\n\nDescription: "${text}"`;
+
+    // 3. Call the Google Gemini API directly
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
+    
+    const geminiResponse = await fetch(geminiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ prompt: text })
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }]
+      })
     });
 
-    if (!aiResponse.ok) {
-      throw new Error("AI Pipeline failed to respond");
+    if (!geminiResponse.ok) {
+      throw new Error("Gemini API request failed");
     }
 
-    // 3. Get the result from their pipeline
-    const aiData = await aiResponse.json();
+    const data = await geminiResponse.json();
     
-    // Fallback to "retail" just in case the AI returns something weird
-    const suggestedIndustry = aiData.industry || "retail";
+    // 4. Extract the text and clean it up (remove spaces/punctuation)
+    let suggestedIndustry = data.candidates[0].content.parts[0].text.trim().toLowerCase();
+    suggestedIndustry = suggestedIndustry.replace(/[^a-z]/g, ''); // Ensure it's just letters
 
-    // 4. Send the final answer back to the React frontend
+    // 5. Send the predicted industry back to the React frontend
     res.status(200).json({
       success: true,
-      industry: suggestedIndustry
+      industry: suggestedIndustry || "retail"
     });
 
   } catch (error) {
-    console.error("AI Pipeline Connection Error:", error);
-    // If the Data Science server is down, don't break the frontend! Just fallback.
+    console.error("Gemini AI Connection Error:", error.message);
+    // If the API fails or hits a rate limit, don't break the frontend! Just fallback.
     res.status(200).json({ 
       success: true, 
       industry: 'retail' 

@@ -4,12 +4,12 @@ This document outlines how the React frontend connects to the Node.js Backend AP
 
 ## Base Configuration
 
-**Base URL (Development):** `http://localhost:5000`
-**Base URL (Production):** Provided by DevOps via `VITE_API_URL=https://bizstartai-backend.onrender.com` environment variable.
+**Base URL (Development):** `http://localhost:5000/api`
+**Base URL (Production):** Provided by DevOps via `VITE_API_BASE_URL=https://bizstartai-backend.onrender.com/api` environment variable.
 
 ### Authentication Header
 
-Most routes require the user to be logged in. When making `fetch` requests to protected routes, you must include the user's JWT token in the headers:
+Most routes require the user to be logged in. When making `axios` or `fetch` requests to protected routes, you must include the user's JWT token in the headers:
 
 ```javascript
 headers: {
@@ -194,7 +194,7 @@ Use this to populate the `Dashboard.jsx` screen. It returns the user's name, the
 
 Use this to generate personalized course recommendations for the `Dashboard.jsx` screen.
 
-* **Endpoint:** `POST /api/ai/recommendations`
+* **Endpoint:** `POST /api/recommendations`
 * **Auth Required:** No (Currently Public)
 
 **Request Body:**
@@ -269,10 +269,16 @@ Use this endpoint in `AIMentor.jsx` to communicate with the AI.
 * **Auth Required:** Yes
 
 **Request Body:**
+*(Note: Must be an array of message objects to support conversation history)*
 
 ```json
 {
-  "message": "How do I calculate profit margins for my soap?"
+  "messages": [
+    {
+      "role": "user",
+      "content": "How do I calculate profit margins for my soap?"
+    }
+  ]
 }
 
 ```
@@ -302,3 +308,6 @@ If an error occurs (e.g., wrong password, missing fields), the API will return a
 }
 
 ```
+
+```
+
