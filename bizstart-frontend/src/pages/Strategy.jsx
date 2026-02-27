@@ -65,7 +65,7 @@ const Strategy = () => {
       <div className="px-6 mt-10">
         <button
           onClick={() => navigate("/financials")} // This will be the next page
-          className="w-full bg-[#6E62B1] hover:bg-[#6E62B1] text-white font-bold py-4 rounded-2xl shadow-lg shadow-purple-200"
+          className="w-full bg-[#6E62B1] hover:bg-[#6E62B1] text-white font-bold py-4 rounded-2xl shadow-lg shadow-purple-200 cursor-pointer"
         >
           Continue
         </button>

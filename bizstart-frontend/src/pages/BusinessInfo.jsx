@@ -16,7 +16,7 @@ export default function BusinessInfo() {
       <div className="flex items-center mb-6 relative">
         <button
           onClick={() => navigate(-1)}
-          className="absolute left-0 p-2 rounded-lg bg-gray-100"
+          className="absolute left-0 p-2 rounded-lg bg-gray-100 cursor-pointer"
         >
           <ArrowLeft size={18} />
         </button>
@@ -63,8 +63,8 @@ export default function BusinessInfo() {
 
       {/* Next Button */}
       <button
-        onClick={() => navigate("/market")}
-        className="w-full mt-8 py-4 rounded-xl text-white font-semibold shadow-md"
+        onClick={() => navigate("/market-info")}
+        className="w-full mt-8 py-4 rounded-xl text-white font-semibold shadow-md cursor-pointer"
         style={{ background: PRIMARY }}
       >
         Next

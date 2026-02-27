@@ -4,12 +4,13 @@ import { useNavigate } from "react-router-dom";
 
 const PRIMARY = "#6E62B1";
 
+// Updated BottomNav to stay slim and centered on desktop
 const BottomNav = () => (
-  <div className="fixed bottom-0 left-0 w-full md:hidden border-t bg-white flex justify-around py-3 text-xs z-20">
-    <div className="flex flex-col items-center text-gray-400">🏠 Home</div>
-    <div className="flex flex-col items-center text-[#6E62B1] font-medium">🧰 Tools</div>
-    <div className="flex flex-col items-center text-gray-400">🤖 AI Mentor</div>
-    <div className="flex flex-col items-center text-gray-400">👤 Profile</div>
+  <div className="fixed bottom-0 left-0 w-full md:bottom-6 md:left-1/2 md:-translate-x-1/2 md:w-max md:rounded-2xl md:shadow-lg border-t md:border bg-white flex justify-around gap-10 px-8 py-3 text-xs z-50">
+    <div className="flex flex-col items-center text-gray-400 cursor-pointer hover:text-gray-600">🏠 Home</div>
+    <div className="flex flex-col items-center text-[#6E62B1] font-medium cursor-pointer">🧰 Tools</div>
+    <div className="flex flex-col items-center text-gray-400 cursor-pointer hover:text-gray-600">🤖 AI Mentor</div>
+    <div className="flex flex-col items-center text-gray-400 cursor-pointer hover:text-gray-600">👤 Profile</div>
   </div>
 );
 
@@ -19,77 +20,97 @@ export default function Financials() {
   const steps = ["Business Info", "Market", "Strategy", "Financials"];
 
   return (
-    <div className="flex justify-center bg-gray-100 min-h-screen">
-      <div className="w-full max-w-md bg-white flex flex-col h-screen">
+    <div className="flex flex-col min-h-screen bg-white">
+      {/* Header - Stretches full width */}
+      <div className="sticky top-0 bg-white px-6 py-5 border-b flex items-center justify-center relative z-10">
+        <button 
+          onClick={() => navigate(-1)} 
+          className="absolute left-6 md:left-10 p-2 bg-gray-100 rounded-xl hover:bg-gray-200 transition-all"
+        >
+          <ArrowLeft size={20} />
+        </button>
+        <h1 className="font-bold text-xl text-gray-800">Financials</h1>
+      </div>
 
-        {/* Header */}
-        <div className="sticky top-0 bg-white px-6 py-4 border-b flex items-center justify-center relative">
-          <button onClick={() => navigate(-1)} className="absolute left-6 p-2 bg-gray-100 rounded-xl">
-            <ArrowLeft size={20} />
-          </button>
-          <h1 className="font-semibold">Financials</h1>
-        </div>
-
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto px-6 py-6 pb-24">
-
-          {/* Steps */}
-          <div className="flex justify-between mb-6">
-            {steps.map((label, i) => (
-              <div key={i} className="flex flex-col items-center flex-1">
-                <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center text-white`}
-                  style={{ backgroundColor: i < 3 ? "#22C55E" : PRIMARY }}
-                >
-                  {i < 3 ? <Check size={16} /> : 4}
-                </div>
-                <p className="text-xs mt-2 text-gray-600">{label}</p>
+      {/* Main Content Area - Full screen width with max-width container for readability */}
+      <div className="flex-1 w-full max-w-5xl mx-auto px-6 py-10 pb-32">
+        
+        {/* Steps Stepper - Wider for desktop */}
+        <div className="flex justify-between mb-12 max-w-3xl mx-auto relative">
+          {/* Background Line for stepper */}
+          <div className="absolute top-5 left-0 w-full h-[2px] bg-gray-100 -z-10 hidden md:block" />
+          
+          {steps.map((label, i) => (
+            <div key={i} className="flex flex-col items-center flex-1">
+              <div
+                className="w-10 h-10 rounded-full flex items-center justify-center text-white shadow-md transition-transform hover:scale-110"
+                style={{ backgroundColor: i < 3 ? "#22C55E" : PRIMARY }}
+              >
+                {i < 3 ? <Check size={18} /> : 4}
               </div>
-            ))}
-          </div>
-
-          {/* Card */}
-          <div className="bg-gray-100 rounded-2xl p-5 text-center mb-8">
-            <p className="font-medium text-gray-700">Step 4 of 4: Financial projections</p>
-            <p className="text-sm text-gray-500 mt-2">
-              Provide your best estimates. We’ll help generate detailed projections!
-            </p>
-          </div>
-
-          {/* Inputs */}
-          <div className="space-y-6">
-
-            <div>
-              <label className="font-medium">Startup Costs</label>
-              <input className="w-full mt-2 p-4 border rounded-xl" />
-              <p className="text-sm text-gray-400 mt-1">
-                Initial investment needed (legal, marketing, etc.)
+              <p className={`text-xs mt-3 font-semibold ${i === 3 ? "text-gray-900" : "text-gray-400"}`}>
+                {label}
               </p>
             </div>
+          ))}
+        </div>
 
-            <div>
-              <label className="font-medium">Monthly Operating Expenses</label>
-              <input className="w-full mt-2 p-4 border rounded-xl" />
+        {/* Instruction Card */}
+        <div className="bg-[#F8F7FF] border border-[#E8E6F5] rounded-2xl p-8 text-center mb-10">
+          <p className="text-lg font-bold text-gray-800">Step 4 of 4: Financial projections</p>
+          <p className="text-gray-500 mt-2 max-w-lg mx-auto">
+            Provide your best estimates for <strong>BizStart AI</strong>. We’ll help generate detailed projections to make your plan investor-ready!
+          </p>
+        </div>
+
+        {/* Form Inputs - 2 Column Grid on Desktop */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          
+          <div className="md:col-span-2">
+            <label className="block text-sm font-bold text-gray-700 mb-2">Startup Costs</label>
+            <div className="relative">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium">₦</span>
+              <input 
+                type="number"
+                className="w-full pl-10 p-4 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-2 focus:ring-[#6E62B1] outline-none transition-all" 
+                placeholder="0.00"
+              />
             </div>
-
-            <div>
-              <label className="font-medium">Revenue Model</label>
-              <input className="w-full mt-2 p-4 border rounded-xl" />
-            </div>
-
+            <p className="text-xs text-gray-400 mt-2">Include legal fees, initial marketing, and equipment.</p>
           </div>
 
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-2">Monthly Operating Expenses</label>
+            <div className="relative">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium">₦</span>
+              <input 
+                type="number"
+                className="w-full pl-10 p-4 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-2 focus:ring-[#6E62B1] outline-none transition-all" 
+                placeholder="0.00"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-2">Revenue Model</label>
+            <input 
+              className="w-full p-4 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-2 focus:ring-[#6E62B1] outline-none transition-all" 
+              placeholder="e.g., Monthly Subscriptions, Unit Sales"
+            />
+          </div>
+
+        </div>
+
+        {/* Action Button - Centered and constrained for desktop */}
+        <div className="mt-12 flex justify-center">
           <button
             onClick={() => navigate("/generating")}
-            className="w-full mt-8 py-4 rounded-xl text-white font-semibold"
+            className="w-full md:w-80 py-4 rounded-2xl text-white font-bold text-lg shadow-xl hover:opacity-90 active:scale-95 transition-all cursor-pointer"
             style={{ backgroundColor: PRIMARY }}
           >
             Generate Plan
           </button>
-
         </div>
-
-        <BottomNav />
       </div>
     </div>
   );

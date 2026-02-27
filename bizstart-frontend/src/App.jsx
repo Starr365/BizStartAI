@@ -23,6 +23,9 @@ import YourPlan from "./pages/YourPlan";
 import EditSection from "./pages/EditSection";
 import MarketInfo from "./pages/MarketInfo";
 import Strategy from "./pages/Strategy";
+import Course from "./pages/Course";
+import CourseDetail from "./pages/CourseDetail";
+import LearnPage from "./pages/Learn";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
 // 1. Define the App component first
@@ -50,8 +53,11 @@ function App() {
           <Route path="/business-info" element={<BusinessInfo />} />
           <Route path="/market-info" element={<MarketInfo />} />
           <Route path="/strategy" element={<Strategy />} />
-
+         
           <Route path="/tools" element={<Tools />} />
+          <Route path="/course/:id" element={<Course />} />
+          <Route path="/course/:id/lesson/:lessonId" element={<CourseDetail />} />
+          <Route path="/learn" element={<LearnPage />} />
           <Route path="/business-plan" element={<BusinessPlan />} />
           <Route path="/business-info" element={<BusinessInfo />} />
           <Route path="/financials" element={<Financials />} />

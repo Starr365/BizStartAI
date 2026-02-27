@@ -55,8 +55,9 @@ const MarketInfo = () => {
       {/* 3. The Continue Button */}
       <div className="px-6 mt-8">
         <button
+        
           onClick={handleContinue}
-          className="w-full bg-[#6E62B1] hover:bg-[#6E62B1] text-white font-bold py-4 rounded-2xl shadow-lg transition-all active:scale-95"
+          className="w-full bg-[#6E62B1] hover:bg-[#6E62B1] text-white font-bold py-4 rounded-2xl shadow-lg transition-all active:scale-95 cursor-pointer"
         >
           Continue
         </button>
