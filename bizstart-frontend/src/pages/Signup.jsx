@@ -1,27 +1,40 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaApple, FaGoogle, FaLock, FaEyeSlash, FaEye, FaChevronLeft } from 'react-icons/fa';
+import { FaApple, FaLock, FaEyeSlash, FaEye, FaChevronLeft } from 'react-icons/fa';
 import { useGoogleLogin } from '@react-oauth/google';
-// 1. Import toast and Toaster
 import toast, { Toaster } from 'react-hot-toast';
+import api from '../api';
+import PageWrapper from '../components/PageWrapper';
+import PrimaryButton from '../components/PrimaryButton';
 
 const SignupScreen = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     name: '',
-    phoneNumber: '',
+    email: '',
     password: ''
   });
 
   const [showPassword, setShowPassword] = useState(false);
 
   const googleLogin = useGoogleLogin({
-    onSuccess: (response) => {
-      console.log("Success! Token:", response.access_token);
-      toast.success('Successfully logged in with Google!');
-      // ADDED: Delay navigation so user can see the success toast
-      setTimeout(() => navigate('/BusinessJourney'), 1000); 
+    onSuccess: async (tokenResponse) => {
+      try {
+        // Send the Google token to your backend
+        const res = await api.post('/auth/google', {
+          access_token: tokenResponse.access_token
+        });
+
+        if (res.data.success) {
+          localStorage.setItem('token', res.data.token);
+          localStorage.setItem('userAccount', JSON.stringify(res.data.user));
+          toast.success('Successfully logged in with Google!');
+          setTimeout(() => navigate('/BusinessJourney'), 1000);
+        }
+      } catch (error) {
+        toast.error('Google login failed. Please try again.');
+      }
     },
     onError: () => toast.error('Google Login Failed. Please try again.'),
   });
@@ -34,30 +47,44 @@ const SignupScreen = () => {
     }));
   };
 
-  const handleCreateAccount = () => {
-    if (!formData.name || !formData.phoneNumber || !formData.password) {
+  const handleCreateAccount = async () => {
+    if (!formData.name || !formData.email || !formData.password) {
       toast.error('Please fill in all fields to continue');
       return;
     }
-    localStorage.setItem('userAccount', JSON.stringify(formData));
-    toast.success('Account created successfully!');
-    // ADDED: Delay navigation so user can see the success toast
-    setTimeout(() => navigate('/BusinessJourney'), 1000);
+
+    try {
+      await api.post('/auth/register', formData);
+
+      // Auto-login
+      const loginRes = await api.post('/auth/login', {
+        email: formData.email,
+        password: formData.password
+      });
+
+      if (loginRes.data.success) {
+        localStorage.setItem('token', loginRes.data.token);
+        localStorage.setItem('userAccount', JSON.stringify(loginRes.data.user)); // use data from login
+        toast.success('Account created successfully!');
+        setTimeout(() => navigate('/BusinessJourney'), 1000);
+      }
+    } catch (err) {
+      const errorMsg = err.response?.data?.message || 'Failed to create account. Please try again.';
+      toast.error(errorMsg);
+    }
   };
 
   return (
-    <div className="fixed inset-0 h-dvh w-full bg-white flex justify-center overflow-hidden">
-      {/* UPDATED: Position set to top-right and added custom animation class */}
-      <Toaster 
-        position="top-right" 
-        reverseOrder={false} 
+    <PageWrapper>
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
         toastOptions={{
           className: 'custom-toast',
           duration: 3000,
         }}
       />
 
-      {/* ADDED: CSS for the slide-in animation from the right */}
       <style>{`
         @keyframes slideInRight {
           from { transform: translateX(100%); opacity: 0; }
@@ -68,122 +95,104 @@ const SignupScreen = () => {
         }
       `}</style>
 
-      <div style={{ width: '100%', maxWidth: '380px', height: '100%' }} className="flex flex-col px-6 py-6">
-        <div className="flex-1 flex flex-col ">
-          
-          {/* Header Section */}
-          <div className="relative flex items-center justify-center mb-8">
-            <button 
-              onClick={() => navigate(-1)}
-              className="absolute left-0 w-10 h-10 flex items-center justify-center rounded-xl bg-white shadow-md border border-gray-50 text-slate-600 cursor-pointer"
-            >
-              <FaChevronLeft size={16} />
-            </button>
-            
-            <h1 
-              style={{ 
-                fontFamily: "'Inter', sans-serif",
-                fontWeight: '300',
-                fontSize: '22px', 
-                letterSpacing: '-0.02em'
-              }}
-              className="text-slate-900"
-            >
-              Create your Account
-            </h1>
-          </div>
-
-          {/* Form Fields */}
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-slate-900 font-sans">Name</label>
-              <input 
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="What should I call you?" 
-                className="w-full p-3.5 rounded-xl border border-gray-200 bg-white outline-none focus:border-[#6E62B1] transition-colors text-base placeholder:text-sm"                   />
-            </div>
-
-            <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-slate-900 font-sans">Phone Number</label>
-              <input 
-                name="phoneNumber"
-                value={formData.phoneNumber}
-                onChange={handleChange}
-                type="tel" 
-                placeholder="Enter phone number" 
-                className="w-full p-3.5 rounded-xl border border-gray-200 bg-white outline-none focus:border-[#6E62B1] transition-colors text-base placeholder:text-sm"
-              />
-            </div>
-
-            <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-slate-900 font-sans">Password</label>
-              <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                  <FaLock size={14} />
-                </span>
-                <input 
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  type={showPassword ? "text" : "password"} 
-                  placeholder="Create a safe password" 
-                  className="w-full p-3.5 pl-10 rounded-xl border border-gray-200 bg-white outline-none focus:border-[#6E62B1] transition-colors text-base placeholder:text-sm"
-                />
-                <button 
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer"
-                >
-                  {showPassword ? <FaEye size={16} /> : <FaEyeSlash size={16} />}
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Primary Action Button */}
-          <button 
-            onClick={handleCreateAccount}
-            style={{ 
-              backgroundColor: '#6E62B1',
-              boxShadow: '0px 1px 4px 0px rgba(0, 0, 0, 0.40)',
-              textShadow: '0px 1px 4px rgba(0, 0, 0, 0.40)'
-            }}
-            className="w-full text-white py-3.5 rounded-xl font-medium text-base transition-all active:scale-[0.98] mt-6 cursor-pointer border-none"
+      <div className="flex-1 flex flex-col ">
+        {/* Header Section */}
+        <div className="relative flex items-center justify-center mb-8">
+          <button
+            onClick={() => navigate(-1)}
+            className="absolute left-0 w-10 h-10 flex items-center justify-center rounded-xl bg-white shadow-md border border-gray-50 text-slate-600 cursor-pointer"
           >
-            Create Account
+            <FaChevronLeft size={16} />
           </button>
 
-          {/* Divider */}
-          <div className="flex items-center gap-4 my-4">
-            <div className="flex-1 h-px bg-gray-100" />
-            <span className="text-gray-400 text-xs">Or</span>
-            <div className="flex-1 h-px bg-gray-100" />
+          <h1 className="text-slate-900 font-sans font-light text-[22px] tracking-tight">
+            Create your Account
+          </h1>
+        </div>
+
+        {/* Form Fields */}
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-slate-900 font-sans">Name</label>
+            <input
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="What should I call you?"
+              className="w-full p-3.5 rounded-xl border border-gray-200 bg-white outline-none focus:border-primary transition-colors text-base placeholder:text-sm" />
           </div>
 
-          {/* Social Buttons */}
-          <div className="flex flex-col gap-3">
-            <button className="w-full flex items-center justify-center gap-3 py-3 rounded-xl border border-gray-200 bg-white font-medium text-sm text-slate-800 cursor-pointer">
-              <FaApple size={18} />
-              Sign in with Apple
-            </button>
-            
-            <button 
-              onClick={() => googleLogin()}
-              className="w-full flex items-center justify-center gap-3 py-3 rounded-xl border border-gray-200 bg-white font-medium text-sm text-slate-800 cursor-pointer"
-            >
-              <img src="https://www.gstatic.com/images/branding/product/1x/googleg_48dp.png" alt="Google" className="w-4 h-4" />
-              Sign in with Google
-            </button>
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-slate-900 font-sans">Email</label>
+            <input
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              type="email"
+              placeholder="Enter email address"
+              className="w-full p-3.5 rounded-xl border border-gray-200 bg-white outline-none focus:border-primary transition-colors text-base placeholder:text-sm"
+            />
           </div>
 
-          <p className="text-center text-xs text-slate-600 mt-6 font-sans">
-            Already have an account? <button onClick={() => navigate('/login')} className="text-[#6E62B1] font-semibold hover:underline cursor-pointer">Login</button>
-          </p>
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-slate-900 font-sans">Password</label>
+            <div className="relative">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                <FaLock size={14} />
+              </span>
+              <input
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                type={showPassword ? "text" : "password"}
+                placeholder="Create a safe password"
+                className="w-full p-3.5 pl-10 rounded-xl border border-gray-200 bg-white outline-none focus:border-primary transition-colors text-base placeholder:text-sm"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer"
+              >
+                {showPassword ? <FaEye size={16} /> : <FaEyeSlash size={16} />}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Primary Action Button */}
+        <PrimaryButton onClick={handleCreateAccount} className="mt-6">
+          Create Account
+        </PrimaryButton>
+
+        {/* Existing User Login Link */}
+        <p className="text-center text-sm text-slate-600 mt-4 font-sans">
+          Already have an account? <button onClick={() => navigate('/login')} className="text-primary font-semibold hover:underline cursor-pointer">Login</button>
+        </p>
+
+        {/* Divider */}
+        <div className="flex items-center gap-4 my-4">
+          <div className="flex-1 h-px bg-gray-100" />
+          <span className="text-gray-400 text-xs">Or</span>
+          <div className="flex-1 h-px bg-gray-100" />
+        </div>
+
+        {/* Social Buttons */}
+        <div className="flex flex-col gap-3">
+          <button className="w-full flex items-center justify-center gap-3 py-3 rounded-xl border border-gray-200 bg-white font-medium text-sm text-slate-800 cursor-pointer">
+            <FaApple size={18} />
+            Sign in with Apple
+          </button>
+
+          <button
+            onClick={() => googleLogin()}
+            className="w-full flex items-center justify-center gap-3 py-3 rounded-xl border border-gray-200 bg-white font-medium text-sm text-slate-800 cursor-pointer"
+          >
+            <img src="https://www.gstatic.com/images/branding/product/1x/googleg_48dp.png" alt="Google" className="w-4 h-4" />
+            Sign in with Google
+          </button>
         </div>
       </div>
-    </div>
+    </PageWrapper>
   );
 };
 

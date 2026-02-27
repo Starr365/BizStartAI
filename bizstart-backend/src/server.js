@@ -4,6 +4,7 @@ const sequelize = require("./config/database");
 require("./models/user.model");
 require("./models/conversation.model");
 require("./models/message.model");
+require("./models/businessProfile.model");
 
 const PORT = process.env.PORT || 5000;
 
@@ -14,7 +15,7 @@ async function startServer() {
     console.log(" Database connected successfully.");
 
     // Sync models (creates tables if they don't exist)
-    await sequelize.sync({ alter: true });
+    await sequelize.sync();
     console.log(" Database synced.");
 
     // Start server

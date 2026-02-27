@@ -28,7 +28,24 @@ const messageLimiter = rateLimit({
   },
 });
 
+// Strict limiter for Authentication endpoints to prevent brute-force attacks
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes lockout
+  max: 5, // Limit each IP to 5 login requests per window
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (req, res, next) => {
+    next(
+      new AppError(
+        "Too many login attempts from this IP, please try again after 15 minutes.",
+        429
+      )
+    );
+  },
+});
+
 module.exports = {
   apiLimiter,
   messageLimiter,
+  authLimiter, // Export the new limiter
 };
