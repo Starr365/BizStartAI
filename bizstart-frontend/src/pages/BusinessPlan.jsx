@@ -37,7 +37,10 @@ export default function BusinessPlan() {
 
         {/* Header */}
         <div className="top-0 z-20 bg-white px-6 py-4 border-b flex items-center justify-center relative">
-          <button className="absolute left-6 p-2 rounded-xl shadow-sm bg-gray-100">
+          <button 
+            onClick={() => navigate(-1)} // This tells the browser to go back one page
+            className="absolute left-4 p-2 rounded-xl bg-gray-100 cursor-pointer active:scale-90 transition-transform"
+          >
             <ArrowLeft size={20} />
           </button>
           <h1 className="text-lg font-semibold">Business Plan</h1>

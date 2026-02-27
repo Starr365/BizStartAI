@@ -3,20 +3,27 @@ import { ArrowLeft, Sparkles, FileText, BookOpen, BarChart3 } from "lucide-react
 import { useNavigate } from "react-router-dom";
 import BottomNav from "../components/BottomNav";
 
-const Header = () => (
-  <div className="sticky top-0 bg-white z-20 px-4 py-3 shadow-sm flex items-center justify-center">
-    <button className="absolute left-4 p-2 rounded-xl bg-gray-100">
-      <ArrowLeft />
-    </button>
+const Header = () => {
+  const navigate = useNavigate(); // Initialize the hook
 
-    <h1 className="text-lg font-semibold">Tools</h1>
-  </div>
-);
+  return (
+    <div className="sticky top-0 bg-white z-20 px-4 py-3 shadow-sm flex items-center justify-center">
+      <button 
+        onClick={() => navigate(-1)} // This tells the browser to go back one page
+        className="absolute left-4 p-2 rounded-xl bg-gray-100 cursor-pointer active:scale-90 transition-transform"
+      >
+        <ArrowLeft size={20} />
+      </button>
+
+      <h1 className="text-lg font-semibold">Tools</h1>
+    </div>
+  );
+};
 
 const ToolCard = ({ icon, title, description, onClick }) => {
   const IconComponent = icon;
   return (
-    <div
+    <div 
       onClick={onClick}
       className="bg-gray-50 rounded-2xl p-4 shadow-sm flex gap-3 items-start cursor-pointer hover:shadow-md transition"
     >
@@ -33,7 +40,7 @@ const ToolCard = ({ icon, title, description, onClick }) => {
 };
 
 const Tools = () => {
-  const navigate = useNavigate();
+const navigate = useNavigate(); // ADD THIS LINE HERE
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
@@ -73,12 +80,14 @@ const Tools = () => {
               icon={BookOpen}
               title="Learning"
               description="Bite-sized lessons for business owners and tenderpreneurs who want clarity."
+              onClick={() => navigate("/learn")}
             />
 
             <ToolCard
               icon={BarChart3}
               title="Financial Projections"
               description="See your 12-month revenue, cost and profit forecast."
+              onClick={() => navigate("/financials")}
             />
           </div>
 
